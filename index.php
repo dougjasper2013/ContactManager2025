@@ -8,6 +8,18 @@
 
         <main>
             <h2>Contact List</h2>
+
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email Address</th>
+                    <th>Phone Number</th>
+                    <th>Status</th>
+                    <th>Birth Date</th>
+                </tr>
+
+            </table>
         </main>
 
         <?php include("footer.php"); ?>
