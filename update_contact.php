@@ -23,7 +23,7 @@
 
     foreach ($contacts as $contact)
     {
-        if ($email_address == $contact["emailAddress"] && $contact_id != $contact["contactID"])
+        if ($email_address == $contact["emailAddress"] && ($contact_id) != ($contact["contactID"]))
         {
             $_SESSION["add_error"] = "Invalid data, Duplicate Email Address. Try again.";
 
