@@ -28,6 +28,7 @@
                     <th>Phone Number</th>
                     <th>Status</th>
                     <th>Birth Date</th>
+                    <th>Photo</th>
                     <th>&nbsp;</th> <!-- for edit button -->
                     <th>&nbsp;</th> <!-- for delete button -->
                 </tr>
@@ -40,6 +41,7 @@
                         <td><?php echo $contact['phone']; ?></td>
                         <td><?php echo $contact['status']; ?></td>
                         <td><?php echo $contact['dob']; ?></td>
+                        <td><img src="<?php echo htmlspecialchars('./images/' . $contact['imageName']); ?>" alt="<?php echo htmlspecialchars('./images/' . $contact['imageName']); ?>" style="width:100px; height:auto;" /></td>
                         <td>
                             <form action="update_contact_form.php" method="post">
                                 <input type="hidden" name="contact_id"
