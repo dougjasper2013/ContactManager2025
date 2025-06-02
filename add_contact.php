@@ -31,8 +31,16 @@
     $email_address = filter_input(INPUT_POST, 'email_address');
     $phone_number = filter_input(INPUT_POST, 'phone_number');
     $status = filter_input(INPUT_POST, 'status'); // assigns the value of the selected radio button
-    $dob = filter_input(INPUT_POST, 'dob');
-    $image_name = $_FILES['file1']['name'];
+    $dob = filter_input(INPUT_POST, 'dob');    
+
+    $file_name = $_FILES['file1']['name'];
+
+    // adjust the filename
+    $i = strrpos($filename, '.');
+    $image_name = substr($filename, 0, $i);
+    $ext = substr($filename, $i);
+
+    $image_name_100 = $image_name . '_100' . $ext;
 
     require_once('database.php');
     $queryContacts = 'SELECT * FROM contacts';
@@ -82,7 +90,7 @@
         $statement->bindValue(':phone', $phone_number);
         $statement->bindValue(':status', $status);
         $statement->bindValue(':dob', $dob);
-        $statement->bindValue(':imageName', $image_name);
+        $statement->bindValue(':imageName', $image_name_100);
 
         $statement->execute();
         $statement->closeCursor();
