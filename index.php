@@ -1,5 +1,13 @@
 <?php
     session_start();
+
+    if (!isset($_SESSION["isLoggedIn"]))
+    {
+        $url = "login_form.php";
+        header("Location: " . $url);
+        die();
+    }
+
     require("database.php");
     $queryContacts = 'SELECT * FROM contacts';
     $statement1 = $db->prepare($queryContacts);
@@ -61,6 +69,7 @@
 
             </table>
             <p><a href="add_contact_form.php">Add Contact</a></p>
+            <p><a href="logout.php">Logout</a></p>
         </main>
 
         <?php include("footer.php"); ?>

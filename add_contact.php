@@ -64,7 +64,7 @@
 
     if ($first_name == null || $last_name == null ||
         $email_address == null || $phone_number == null ||
-        $dob == null)
+        $status == null || $dob == null)
     {
         $_SESSION["add_error"] = "Invalid contact data, Check all fields and try again.";
 
