@@ -21,14 +21,15 @@ $contacts = $statement1->fetchAll();
 $statement1->closeCursor();
 
 foreach ($contacts as $contact) {
-    if ($email_address == $contact["emailAddress"] && $contact_id != $contact["contactID"]) {
+    if ($email_address === $contact["emailAddress"] && $contact_id !== $contact["contactID"]) {
         $_SESSION["add_error"] = "Invalid data, Duplicate Email Address. Try again.";
         header("Location: error.php");
         die();
     }
 }
 
-if ($first_name == null || $last_name == null || $email_address == null || $phone_number == null || $dob == null || $type_id == null) {
+if ($first_name === null || $last_name === null || $email_address === null || 
+    $phone_number === null || $dob === null || $type_id === null) {
     $_SESSION["add_error"] = "Invalid contact data, Check all fields and try again.";
     header("Location: error.php");
     die();
@@ -47,25 +48,37 @@ $statement->closeCursor();
 
 $image_name = $current_image_name;
 
-// Process new uploaded image
 if ($image && $image['error'] === UPLOAD_ERR_OK) {
+    // Delete old image files if they exist
+    $base_dir = 'images/';
+    if ($current_image_name) {
+        $dot = strrpos($current_image_name, '_100.');
+        if ($dot !== false) {
+            $original_name = substr($current_image_name, 0, $dot) . substr($current_image_name, $dot + 4);
+            $original = $base_dir . $original_name;
+            $img_100 = $base_dir . $current_image_name;
+            $img_400 = $base_dir . substr($current_image_name, 0, $dot) . '_400' . substr($current_image_name, $dot + 4);
+
+            if (file_exists($original)) unlink($original);
+            if (file_exists($img_100)) unlink($img_100);
+            if (file_exists($img_400)) unlink($img_400);
+        }
+    }
+
+    // Upload and process new image
     $original_filename = basename($image['name']);
-    $upload_path = 'images/' . $original_filename;
-
+    $upload_path = $base_dir . $original_filename;
     move_uploaded_file($image['tmp_name'], $upload_path);
+    process_image($base_dir, $original_filename);
 
-    // Create _100 and _400 versions
-    process_image('images', $original_filename);
-
-    // Construct filename with _100 suffix
+    // Save new _100 filename for database
     $dot_position = strrpos($original_filename, '.');
     $name_without_ext = substr($original_filename, 0, $dot_position);
     $extension = substr($original_filename, $dot_position);
-
-    $image_name = $name_without_ext . '_100' . $extension; // This gets saved to DB
+    $image_name = $name_without_ext . '_100' . $extension;
 }
 
-// Update contact info
+// Update contact
 $query = 'UPDATE contacts
     SET firstName = :firstName,
         lastName = :lastName,
