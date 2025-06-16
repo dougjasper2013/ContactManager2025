@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,6 +13,14 @@
 
         <main>
             <h2>Login</h2>
+
+            <?php
+                if (isset($_SESSION['login_error'])) 
+                {
+                    echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['login_error']) . '</p>';
+                    unset($_SESSION['login_error']);
+                }
+            ?>
 
             <form action="login.php" method="post" id="login_form"
                 enctype="multipart/form-data">
