@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set("America/Toronto");
 require_once('database.php');
 
 $user_name = $_POST['user_name'];
@@ -12,26 +13,16 @@ $statement->execute();
 $row = $statement->fetch();
 $statement->closeCursor();
 
-if ($row) {
-    
-    
+if ($row) {   
 
     $now = new DateTime();
     $last_failed = new DateTime($row['last_failed_login']);
-
-    //$int1 = $now->getTimeStamp();
-    //$int2 = $last_failed->getTimeStamp();
-    $interval = $now->getTimeStamp() - $last_failed->getTimeStamp();   
-
-    //var_dump($now->getTimestamp());
-    //var_dump($last_failed->getTimestamp());
-    //var_dump($interval);
-    //exit();
-
+    
+    $interval = $now->getTimeStamp() - $last_failed->getTimeStamp();  
 
     if ($row['failed_attempts'] >= 3 && $interval < 300) {
         $remaining = 300 - $interval;
-        $_SESSION['login_error'] = "Account locked. Try again in " . ceil($remaining / 60) . " minutes.";
+        $_SESSION['login_error'] = "Account locked. Try again in " . ceil($remaining) . " seconds.";
         header("Location: login_form.php");
         exit;
     }
@@ -57,7 +48,7 @@ if ($row) {
         $statement = $db->prepare($query);
         $statement->bindValue(':userName', $user_name);
         $statement->execute();
-        $statement->closeCursor();
+        $statement->closeCursor();    
 
         $_SESSION['login_error'] = "Incorrect password.";
         header("Location: login_form.php");
